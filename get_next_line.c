@@ -1,30 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeongrol <jeongrol@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/10 19:54:32 by jeongrol          #+#    #+#             */
+/*   Updated: 2023/01/10 21:03:21 by jeongrol         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 char	*get_next_line(int fd)
 {
-	static t_glist	*list;
-	t_glist			*now_node;
-	char			*line;
-	int				total_len;
-
-	line = NULL;
-	total_len = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	now_node = set_now_node(&list, fd);
-	if (now_node == NULL)
-		return (NULL);
-	if (read(now_node->fd, NULL, 0) < 0)
-		return (free_all(&list, now_node, line));
+	static char	*cache;
+	char		*buff;
 	
 }
 
-int main(void)
+int	main(void)
 {
-	while (1)
-	{
-		get_next_line();
+	int		fd;
+	char	*fin_line;
 
-	}
+	fd = open("test.txt", O_RDONLY);
+
+	fin_line = get_next_line(fd);
+	printf("1. {%s}\n", fin_line);
+	free(fin_line);
+
+	fin_line = get_next_line(fd);
+	printf("2. {%s}\n", fin_line);
+	free(fin_line);
+	
+	fin_line = get_next_line(fd);
+	printf("3. {%s}\n", fin_line);
+	free(fin_line);
+	
+	fin_line = get_next_line(fd);
+	printf("4. {%s}\n", fin_line);
+	free(fin_line);
+	
+	fin_line = get_next_line(fd);
+	printf("5. {%s}\n", fin_line);
+	free(fin_line);
+	
+	fin_line = get_next_line(fd);
+	printf("6. {%s}\n", fin_line);
+	free(fin_line);
+
+	// printf("-----------------leaks test---------------------\n\n");
+	// system("leaks a.out");
+	close(fd);
 	return (0);
 }

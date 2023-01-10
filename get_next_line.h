@@ -1,20 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jeongrol <jeongrol@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/10 19:54:42 by jeongrol          #+#    #+#             */
+/*   Updated: 2023/01/10 21:21:50 by jeongrol         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <fcntl.h>
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
-# endif 
-
-typedef struct s_glist
-{
-	int		fd;
-	char	buf[BUFFER_SIZE];
-	int		buf_len;
-	int		printed_buf_len;
-	struct s_glist *next;
-}	t_glist;
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 #endif
