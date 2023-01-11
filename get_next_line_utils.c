@@ -6,7 +6,7 @@
 /*   By: jeongrol <jeongrol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 19:54:36 by jeongrol          #+#    #+#             */
-/*   Updated: 2023/01/12 03:37:24 by jeongrol         ###   ########.fr       */
+/*   Updated: 2023/01/12 06:05:22 by jeongrol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int	ft_strlen(const char *s)
 {
 	int	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i] != '\0')
 		i++;
@@ -58,29 +60,29 @@ int	ft_linelen(const char *s)
 	return (-1);
 }
 
-char	*ft_strjoin(char *join_buff, char *tmp, int tmp_len)
+char	*ft_strjoin(char *buff, char *tmp, int tmp_len)
 {
-	char	*re_join_buff;
+	char	*join_buff;
 	int		buff_len;
 	int		i;
-	int		j;
 
+	buff_len = ft_strlen(buff);
+	join_buff = (char *)malloc(sizeof(char) * (buff_len + tmp_len + 1));
 	if (!join_buff)
-		return (ft_strdup(tmp));
-	buff_len = ft_strlen(join_buff);
-	re_join_buff = (char *)malloc(sizeof(char) * (buff_len + tmp_len + 1));
-	if (!re_join_buff)
 		return (NULL);
-	i = -1;
-	while (join_buff[i++] != '\0')
-		re_join_buff[i] = join_buff[i];
-	j = 0;
-	while (tmp[j] != '\0')
+	i = 0;
+	while (i < buff_len)
 	{
-		re_join_buff[i + j] = tmp[j];
-		j++;
+		join_buff[i] = buff[i];
+		i++;
+	}	
+	i = 0;
+	while (i < tmp_len)
+	{
+		join_buff[buff_len + i] = tmp[i];
+		i++;
 	}
-	re_join_buff[i + j] = '\0';
-	free(join_buff);
-	return (re_join_buff);
+	join_buff[buff_len + i] = '\0';
+	free(buff);
+	return (join_buff);
 }

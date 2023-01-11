@@ -6,7 +6,7 @@
 /*   By: jeongrol <jeongrol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 19:54:32 by jeongrol          #+#    #+#             */
-/*   Updated: 2023/01/12 03:44:04 by jeongrol         ###   ########.fr       */
+/*   Updated: 2023/01/12 06:32:42 by jeongrol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,12 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buff = ft_strdup(cache);
+	if (cache)
+	{
+		free(cache);
+		cache = NULL;
+	}
 	buff = make_buff(buff, fd);
-	free(cache);
 	if (!buff)
 		return (NULL);
 	buff_len = ft_strlen(buff);
@@ -124,41 +128,4 @@ char	*get_next_line(int fd)
 	cache = make_cache(buff, line_len, buff_len);
 	free(buff);
 	return (line);
-}
-
-int	main(void)
-{
-	int		fd;
-	char	*fin_line;
-
-	fd = open("test.txt", O_RDONLY);
-
-	fin_line = get_next_line(fd);
-	printf("1. {%s}\n", fin_line);
-	free(fin_line);
-
-	fin_line = get_next_line(fd);
-	printf("2. {%s}\n", fin_line);
-	free(fin_line);
-	
-	fin_line = get_next_line(fd);
-	printf("3. {%s}\n", fin_line);
-	free(fin_line);
-	
-	fin_line = get_next_line(fd);
-	printf("4. {%s}\n", fin_line);
-	free(fin_line);
-	
-	fin_line = get_next_line(fd);
-	printf("5. {%s}\n", fin_line);
-	free(fin_line);
-	
-	fin_line = get_next_line(fd);
-	printf("6. {%s}\n", fin_line);
-	free(fin_line);
-
-	printf("-----------------leaks test---------------------\n\n");
-	system("leaks a.out");
-	close(fd);
-	return (0);
 }
