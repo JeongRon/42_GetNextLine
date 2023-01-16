@@ -6,7 +6,7 @@
 /*   By: jeongrol <jeongrol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 19:54:36 by jeongrol          #+#    #+#             */
-/*   Updated: 2023/01/12 06:05:22 by jeongrol         ###   ########.fr       */
+/*   Updated: 2023/01/16 17:39:01 by jeongrol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 char	*ft_strdup(const char *src)
 {
-	size_t	src_len;
+	int		src_len;
 	char	*temp;
-	size_t	i;
+	int		i;
 
-	if (!src)
-		return (NULL);
 	src_len = ft_strlen(src);
 	temp = (char *)malloc(sizeof(char) * (src_len + 1));
 	if (!temp)
@@ -32,6 +30,12 @@ char	*ft_strdup(const char *src)
 	}
 	temp[i] = '\0';
 	return (temp);
+}
+
+void	free_all(char *a, char *b)
+{
+	free(a);
+	free(b);
 }
 
 int	ft_strlen(const char *s)

@@ -6,13 +6,13 @@
 /*   By: jeongrol <jeongrol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/10 19:54:32 by jeongrol          #+#    #+#             */
-/*   Updated: 2023/01/12 06:32:42 by jeongrol         ###   ########.fr       */
+/*   Updated: 2023/01/16 17:45:58 by jeongrol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	check_buff(char *buff)
+static int	check_buff(char *buff)
 {
 	int	i;
 
@@ -28,42 +28,46 @@ int	check_buff(char *buff)
 	return (1);
 }
 
-char	*make_buff(char *buff, int fd)
+static char	*make_buff(char *buff, int fd, int read_size)
 {
-	char	*join_buff;
 	char	*tmp;
-	int		read_size;
 
-	join_buff = buff;
 	tmp = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!tmp)
 		return (NULL);
 	tmp[BUFFER_SIZE] = '\0';
-	while (check_buff(join_buff) == 1)
+	while (check_buff(buff) == 1)
 	{
 		read_size = read(fd, tmp, BUFFER_SIZE);
 		if (read_size == -1)
 		{
-			free(join_buff);
-			free(tmp);
+			free_all(buff, tmp);
 			return (NULL);
 		}
 		else if (read_size == 0)
 			break ;
-		else
-			join_buff = ft_strjoin(join_buff, tmp, read_size);
+		buff = ft_strjoin(buff, tmp, read_size);
+		if (!buff)
+		{
+			free_all(buff, tmp);
+			return (NULL);
+		}
 	}
 	free(tmp);
-	return (join_buff);
+	return (buff);
 }
 
-char	*make_line(char *buff, int line_len)
+static char	*make_line(char *buff, int line_len)
 {
 	char	*new_line;
 	int		i;
 
 	if (line_len == -1)
+	{
 		new_line = ft_strdup(buff);
+		if (!new_line)
+			return (NULL);
+	}
 	else
 	{
 		new_line = (char *)malloc(sizeof(char) * (line_len + 1));
@@ -80,17 +84,23 @@ char	*make_line(char *buff, int line_len)
 	return (new_line);
 }
 
-char	*make_cache(char *buff, int line_len, int buff_len)
+static char	*make_cache(char *buff, char *line, int line_len)
 {
 	char	*new_cache;
+	int		buff_len;
 	int		i;
 	int		j;
 
+	buff_len = ft_strlen(buff);
 	if (line_len == -1 || buff_len == line_len)
 		return (NULL);
 	new_cache = (char *)malloc(sizeof(char) * (buff_len - line_len + 1));
 	if (!new_cache)
+	{
+		free(line);
+		line = NULL;
 		return (NULL);
+	}
 	i = 0;
 	j = line_len;
 	while (j < buff_len)
@@ -108,24 +118,26 @@ char	*get_next_line(int fd)
 	static char	*cache;
 	char		*buff;
 	char		*line;
-	int			buff_len;
 	int			line_len;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buff = ft_strdup(cache);
 	if (cache)
 	{
+		buff = ft_strdup(cache);
+		if (!buff)
+			return (NULL);
 		free(cache);
 		cache = NULL;
 	}
-	buff = make_buff(buff, fd);
+	else
+		buff = NULL;
+	buff = make_buff(buff, fd, 0);
 	if (!buff)
 		return (NULL);
-	buff_len = ft_strlen(buff);
 	line_len = ft_linelen(buff);
 	line = make_line(buff, line_len);
-	cache = make_cache(buff, line_len, buff_len);
+	cache = make_cache(buff, line, line_len);
 	free(buff);
 	return (line);
 }
